@@ -10,7 +10,7 @@ jobs:
       # install golang
       - run: sudo add-apt-repository ppa:longsleep/golang-backports
       - run: sudo apt update
-      - run: apt install golang-go
+      - run: sudo apt install golang-go
 
       - name: Run go test
         run: go test ./...
