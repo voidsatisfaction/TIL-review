@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       # install golang
       - run: sudo add-apt-repository ppa:longsleep/golang-backports
-      - run: apt update
+      - run: sudo apt update
       - run: apt install golang-go
 
       - name: Run go test
