@@ -12,6 +12,8 @@ jobs:
       - run: sudo apt update
       - run: sudo apt install golang-go
 
+      - run: go version
+
       - name: Run go test
         run: go test ./...
 
