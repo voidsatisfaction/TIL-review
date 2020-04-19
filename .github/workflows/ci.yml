@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - run: go version
       # install golang
       - run: sudo add-apt-repository ppa:longsleep/golang-backports
       - run: sudo apt update
