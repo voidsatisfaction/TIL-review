@@ -1,0 +1,15 @@
+{
+  "github": {
+    "username": "voidsatisfaction",
+    "repository": "TIL"
+  },
+  "mail": {
+    "from": "cyanicjin1@gmail.com",
+    "to": [
+      "cyanicjin1@gmail.com"
+    ],
+    "username": "voidsatisfaction",
+    "password": "pass"
+  },
+  "alarmTime": ["22:00", "23:00"]
+}
