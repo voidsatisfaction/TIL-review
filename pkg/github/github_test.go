@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 type ownerRepositoryExpected struct {
@@ -35,11 +36,12 @@ func TestGithubClient(t *testing.T) {
 	}
 }
 
-func TestGithubClientGetCommits(t *testing.T) {
+func TestGithubClientGetTILCommits(t *testing.T) {
 	owner, repository := "voidsatisfaction", "TIL"
 	ghc := NewClient(owner, repository)
+	since, until := time.Now().AddDate(0, 0, -3), time.Now()
 
-	commitList, err := ghc.GetCommitList()
+	commitList, err := ghc.GetTILCommitList(&since, &until)
 
 	if err != nil {
 		t.Fatalf("%+v", err)
