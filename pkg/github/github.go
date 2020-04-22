@@ -3,6 +3,7 @@ package github
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -40,13 +41,19 @@ type Commit struct {
 	CommentsURL string `json:"comments_url,omitempty"`
 }
 
-func (githubClient *GithubClient) GetCommitList() (*CommitList, error) {
+func (githubClient *GithubClient) GetTILCommitList(since, until *time.Time) (*CommitList, error) {
 	commitListURLString := newCommitListURLString(
 		githubClient.owner,
 		githubClient.repository,
 	)
 
+	layout := "2006-01-02T15:04:05Z"
+	sinceString := since.Format(layout)
+	untilString := until.Format(layout)
+
 	resp, err := githubClient.httpClient.R().
+		SetQueryParam("since", sinceString).
+		SetQueryParam("until", untilString).
 		Get(commitListURLString)
 
 	if err != nil {
