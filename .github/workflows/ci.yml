@@ -12,5 +12,6 @@ jobs:
       - run: go version
 
       - name: Run go test
-        run: go test ./...
+        run: ./script/go_test.sh
+
 

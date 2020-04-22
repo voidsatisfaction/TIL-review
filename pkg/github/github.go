@@ -1,23 +1,72 @@
 package github
 
 import (
+	"encoding/json"
+	"fmt"
+	"time"
+
 	"github.com/go-resty/resty/v2"
 )
 
-type githubClient struct {
-	username   string
+const apiHost string = "https://api.github.com"
+
+func newCommitListURLString(owner, repository string) string {
+	return fmt.Sprintf("%s/repos/%s/%s/commits", apiHost, owner, repository)
+}
+
+type GithubClient struct {
+	owner      string
 	repository string
 
 	httpClient *resty.Client
 }
 
-func CreateClient(username string, repository string) *githubClient {
+func NewClient(owner string, repository string) *GithubClient {
 	httpClient := resty.New()
 
-	return &githubClient{
-		username:   username,
+	return &GithubClient{
+		owner:      owner,
 		repository: repository,
 
 		httpClient: httpClient,
 	}
+}
+
+type CommitList []Commit
+
+type Commit struct {
+	SHA         string `json:"sha,omitempty"`
+	HTMLURL     string `json:"html_url,omitempty"`
+	URL         string `json:"url,omitempty"`
+	CommentsURL string `json:"comments_url,omitempty"`
+}
+
+func (githubClient *GithubClient) GetTILCommitList(since, until *time.Time) (*CommitList, error) {
+	commitListURLString := newCommitListURLString(
+		githubClient.owner,
+		githubClient.repository,
+	)
+
+	layout := "2006-01-02T15:04:05Z"
+	sinceString := since.Format(layout)
+	untilString := until.Format(layout)
+
+	resp, err := githubClient.httpClient.R().
+		SetQueryParam("since", sinceString).
+		SetQueryParam("until", untilString).
+		Get(commitListURLString)
+
+	if err != nil {
+		return nil, err
+	}
+
+	commitList := &CommitList{}
+
+	err = json.Unmarshal(resp.Body(), commitList)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return commitList, nil
 }

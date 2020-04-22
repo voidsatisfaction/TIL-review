@@ -1,33 +1,53 @@
 package github
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+	"time"
+)
 
-type usernameRepositoryExpected struct {
-	username   string
+type ownerRepositoryExpected struct {
+	owner      string
 	repository string
 }
 
 func TestGithubClient(t *testing.T) {
-	usernameRepositories := []usernameRepositoryExpected{
+	ownerRepositories := []ownerRepositoryExpected{
 		{
-			username:   `hello world`,
+			owner:      `hello world`,
 			repository: `hello repository`,
 		},
 		{
-			username:   `1234`,
+			owner:      `1234`,
 			repository: `5678`,
 		},
 	}
 
-	for _, v := range usernameRepositories {
-		githubClient := CreateClient(v.username, v.repository)
+	for _, v := range ownerRepositories {
+		githubClient := NewClient(v.owner, v.repository)
 
-		if githubClient.username != v.username {
-			t.Fatalf("expected username to be %v, got: %v", v.username, githubClient.username)
+		if githubClient.owner != v.owner {
+			t.Fatalf("expected owner to be %v, got: %v", v.owner, githubClient.owner)
 		}
 
 		if githubClient.repository != v.repository {
 			t.Fatalf("expected repository to be %v, got: %v", v.repository, githubClient.repository)
 		}
+	}
+}
+
+func TestGithubClientGetTILCommits(t *testing.T) {
+	owner, repository := "voidsatisfaction", "TIL"
+	ghc := NewClient(owner, repository)
+	since, until := time.Now().AddDate(0, 0, -3), time.Now()
+
+	commitList, err := ghc.GetTILCommitList(&since, &until)
+
+	if err != nil {
+		t.Fatalf("%+v", err)
+	}
+
+	for _, commit := range *commitList {
+		fmt.Println(commit)
 	}
 }
