@@ -30,6 +30,8 @@ type configJSON struct {
 		Repository string `json:"repository"`
 	} `json:"github"`
 	Mail struct {
+		SmtpHost string   `json:"smtpHost"`
+		SmtpPort string   `json:"smtpPort"`
 		From     string   `json:"from"`
 		To       []string `json:"to"`
 		Username string   `json:"username"`
