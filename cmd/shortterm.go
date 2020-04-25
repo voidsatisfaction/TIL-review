@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path"
 
 	configreader "github.com/voidsatisfaction/TIL-review/pkg/configReader"
 	"github.com/voidsatisfaction/TIL-review/pkg/mailManager"
@@ -16,19 +17,23 @@ func main() {
 		os.Exit(1)
 	}
 	configFilePath := os.Args[1]
-	shorttermHTMLPath := os.Args[2]
+	shortTermHTMLPath := os.Args[2]
+	shortTermHTMLFileName := path.Base(shortTermHTMLPath)
 
 	configFile := configreader.ReadFromJson(configFilePath)
 
-	fmt.Printf("%+v", configFile)
-
 	templateEngine := templateEngine.New()
-	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	htmlString, err := templateEngine.CreateHTML(
-		shorttermHTMLPath,
-		struct{ message string }{message: "hello world!"},
+		shortTermHTMLFileName,
+		shortTermHTMLPath,
+		struct {
+			message string
+			test    string
+		}{
+			message: "hello world!",
+			test:    "test argument",
+		},
 	)
-	htmlString = mime + htmlString
 
 	if err != nil {
 		fmt.Printf("%+v", err)
