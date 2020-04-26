@@ -1,4 +1,4 @@
-package templateEngine
+package templateengine
 
 import (
 	"bytes"
@@ -13,9 +13,11 @@ func New() *TemplateEngine {
 	return &TemplateEngine{}
 }
 
-func (te *TemplateEngine) CreateHTML(fileName, templateFilePath string, data interface{}) (string, error) {
-	template := template.New(fileName)
-	t, err := template.ParseFiles(templateFilePath)
+/*
+	CreateHTML is ...
+*/
+func (te *TemplateEngine) CreateHTML(templateFilePathList []string, data interface{}) (string, error) {
+	t, err := template.ParseFiles(templateFilePathList...)
 	if err != nil {
 		return "", err
 	}

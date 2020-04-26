@@ -1,0 +1,287 @@
+{{ template "_base" . }}
+
+{{ define "main" }}
+
+<section>
+  <table width="100%" height="100%" cellspacing="0" cellpadding="0" align="center">
+    <tbody>
+      <tr>
+        <td width="100%" valign="top" bgcolor="#ffffff" align="center">
+          <center>
+            <!-- last 3days section commits -->
+            {{ template "last_3days_section" . }}
+
+            <!-- 7 days ago commits -->
+            {{ template "7days_ago_commits_section" . }}
+
+            <!-- 14 days ago commits -->
+            {{ template "14days_ago_commits_section" . }}
+
+            <!-- 30 days ago commits -->
+            {{ template "30days_ago_commits_section" . }}
+          </center>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+{{ end }}
+
+{{ define "last_3days_section" }}
+  {{ if .Last3DaysCommitList }}
+  <table class="w320" style="margin: 0 auto;" width="534" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr style="margin:15 auto">
+        <td valign="top" align="center">
+          <!-- Last 3 days -->
+          <table style="margin:60px auto 30px;" width="100%" cellspacing="0" cellpadding="0">
+            <tbody>
+              <tr>
+                <td
+                  style="text-align:center; font-family: Montserrat, Verdana, Arial, sans-serif;                                    font-size: 21px;                                    font-weight: bold;                                    font-style: normal;                                    font-stretch: normal;                                    line-height: 1.25;                                    letter-spacing: normal;                                    text-align: center;                                    color: #212121;">
+                  Commits of Last 3Days
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin: 0 auto; border-radius: 8px; border: solid 1px rgba(219, 223, 226, 0.7);">
+            <table style="table-layout: fixed;" width="100%">
+              <tbody>
+                {{range .Last3DaysCommitList}}
+                <tr>
+                  <td style="text-align:left;" width="100%">
+                    <a href="{{ .HTMLURL }}" style="display: block" rel="noreferrer noopener" target="_blank">
+                      <div style=" padding:20px;">
+                        <div
+                          style="font-family: 'fira-sans', Roboto; font-size: 12px; line-height: 1.67; color: #afbdc5; font-weight: 500; display: inline-block;">
+                          <span style="margin-right: 7px;">Commit</span>
+                        </div>
+                        <div
+                          style="font-family: Helvetica, Arial, sans-serif;font-weight: bold; color: #212121;  font-size: 14px; ">
+                          {{ .Commit.Message }}
+                        </div>
+                      </div>
+                    </a>
+                  </td>
+                  <td width="95px">
+                    <table style="margin:0 auto;" width="100%" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td style="text-align:right">
+                            <a href="https://leetcode.com/T7KxOs/?DRVUUAkwARUGHGpKABwBGQcWalAB=963&amp;DRVUUAk%3D=lourie%40naver.com&amp;BBFbUjoBEx0N=question_link&amp;DgpaVDoKHxEBFGpaCQYRGw%3D%3D=%7B%22Gx1bXTocFwMbEVpXOgYW%22%3A+963%2C+%22DRVUUAk%3D%22%3A+%22lourie%40naver.com%22%2C+%22HBlHXgAbLQUaFEY%3D%22%3A+%5B%22RxtaVxEKAQRHGUVQShgXFQMUTBQGABwEDQtBFFRXRF8aHVJQFhsXAg%3D%3D%22%2C+%22RxtaVxEKAQRHD1BcDgMLXQsXW00AHAZdWUADFg%3D%3D%22%5D%7D&amp;DhFbWAkwBwIE=https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/"
+                              style="display: block" rel="noreferrer noopener" target="_blank">
+                              <img src="https://assets.leetcode.com/static_assets/email_batch/grey.png" alt="›"
+                                style="margin-right: 36px" loading="lazy" height="12">
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 20px;" colspan="2" width="100%" height="1">
+                    <div style="border-bottom: solid 1px rgba(219, 223, 226, 0.7);"></div>
+                  </td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  {{ end }}
+{{ end }}
+
+{{ define "7days_ago_commits_section" }}
+  <!-- 7 days ago commits -->
+  {{ if .CommitList7DaysAgo }}
+  <table class="w320" style="margin: 0 auto;" width="534" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr style="margin:15 auto">
+        <td valign="top" align="center">
+          <!-- Start TOP PICKS -->
+          <table style="margin:60px auto 30px;" width="100%" cellspacing="0" cellpadding="0">
+            <tbody>
+              <tr>
+                <td
+                  style="text-align:center; font-family: Montserrat, Verdana, Arial, sans-serif;                                    font-size: 21px;                                    font-weight: bold;                                    font-style: normal;                                    font-stretch: normal;                                    line-height: 1.25;                                    letter-spacing: normal;                                    text-align: center;                                    color: #212121;">
+                  7 Days ago commits
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin: 0 auto; border-radius: 8px; border: solid 1px rgba(219, 223, 226, 0.7);">
+            <table style="table-layout: fixed;" width="100%">
+              <tbody>
+                {{range .CommitList7DaysAgo}}
+                <tr>
+                  <td style="text-align:left;" width="100%">
+                    <a href="{{ .HTMLURL }}" style="display: block" rel="noreferrer noopener" target="_blank">
+                      <div style=" padding:20px;">
+                        <div
+                          style="font-family: 'fira-sans', Roboto; font-size: 12px; line-height: 1.67; color: #afbdc5; font-weight: 500; display: inline-block;">
+                          <span style="margin-right: 7px;">Commit</span>
+                        </div>
+                        <div
+                          style="font-family: Helvetica, Arial, sans-serif;font-weight: bold; color: #212121; overflow: auto;  font-size: 14px;">
+                          {{ .Commit.Message }}
+                        </div>
+                      </div>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 20px;" colspan="2" width="100%" height="1">
+                    <div style="border-bottom: solid 1px rgba(219, 223, 226, 0.7);"></div>
+                  </td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  {{ end }}
+{{ end }}
+
+{{ define "14days_ago_commits_section" }}
+  {{ if .CommitList14DaysAgo }}
+  <table class="w320" style="margin: 0 auto;" width="534" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr style="margin:15 auto">
+        <td valign="top" align="center">
+          <!-- Start TOP PICKS -->
+          <table style="margin:60px auto 30px;" width="100%" cellspacing="0" cellpadding="0">
+            <tbody>
+              <tr>
+                <td
+                  style="text-align:center; font-family: Montserrat, Verdana, Arial, sans-serif;                                    font-size: 21px;                                    font-weight: bold;                                    font-style: normal;                                    font-stretch: normal;                                    line-height: 1.25;                                    letter-spacing: normal;                                    text-align: center;                                    color: #212121;">
+                  14 Days ago commits
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin: 0 auto; border-radius: 8px; border: solid 1px rgba(219, 223, 226, 0.7);">
+            <table style="table-layout: fixed;" width="100%">
+              <tbody>
+                {{range .CommitList14DaysAgo}}
+                <tr>
+                  <td style="text-align:left;" width="100%">
+                    <a href="{{ .HTMLURL }}" style="display: block" rel="noreferrer noopener" target="_blank">
+                      <div style=" padding:20px;">
+                        <div
+                          style="font-family: 'fira-sans', Roboto; font-size: 12px; line-height: 1.67; color: #afbdc5; font-weight: 500; display: inline-block;">
+                          <span style="margin-right: 7px;">Commit</span>
+                        </div>
+                        <div
+                          style="font-family: Helvetica, Arial, sans-serif;font-weight: bold; color: #212121; overflow: auto;  font-size: 14px;">
+                          {{ .Commit.Message }}
+                        </div>
+                      </div>
+                    </a>
+                  </td>
+                  <td width="95px">
+                    <table style="margin:0 auto;" width="100%" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td style="text-align:right">
+                            <a href="https://leetcode.com/T7KxOs/?DRVUUAkwARUGHGpKABwBGQcWalAB=963&amp;DRVUUAk%3D=lourie%40naver.com&amp;BBFbUjoBEx0N=question_link&amp;DgpaVDoKHxEBFGpaCQYRGw%3D%3D=%7B%22Gx1bXTocFwMbEVpXOgYW%22%3A+963%2C+%22DRVUUAk%3D%22%3A+%22lourie%40naver.com%22%2C+%22HBlHXgAbLQUaFEY%3D%22%3A+%5B%22RxtaVxEKAQRHGUVQShgXFQMUTBQGABwEDQtBFFRXRF8aHVJQFhsXAg%3D%3D%22%2C+%22RxtaVxEKAQRHD1BcDgMLXQsXW00AHAZdWUADFg%3D%3D%22%5D%7D&amp;DhFbWAkwBwIE=https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/"
+                              style="display: block" rel="noreferrer noopener" target="_blank">
+                              <img src="https://assets.leetcode.com/static_assets/email_batch/grey.png" alt="›"
+                                style="margin-right: 36px" loading="lazy" height="12">
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 20px;" colspan="2" width="100%" height="1">
+                    <div style="border-bottom: solid 1px rgba(219, 223, 226, 0.7);"></div>
+                  </td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  {{ end }}
+{{ end }}
+
+{{ define "30days_ago_commits_section" }}
+  {{ if .CommitList30DaysAgo }}
+  <table class="w320" style="margin: 0 auto;" width="534" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr style="margin:15 auto">
+        <td valign="top" align="center">
+          <!-- Start TOP PICKS -->
+          <table style="margin:60px auto 30px;" width="100%" cellspacing="0" cellpadding="0">
+            <tbody>
+              <tr>
+                <td
+                  style="text-align:center; font-family: Montserrat, Verdana, Arial, sans-serif;                                    font-size: 21px;                                    font-weight: bold;                                    font-style: normal;                                    font-stretch: normal;                                    line-height: 1.25;                                    letter-spacing: normal;                                    text-align: center;                                    color: #212121;">
+                  30 Days ago commits
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin: 0 auto; border-radius: 8px; border: solid 1px rgba(219, 223, 226, 0.7);">
+            <table style="table-layout: fixed;" width="100%">
+              <tbody>
+                {{range .CommitList30DaysAgo}}
+                <tr>
+                  <td style="text-align:left;" width="100%">
+                    <a href="{{ .HTMLURL }}" style="display: block" rel="noreferrer noopener" target="_blank">
+                      <div style=" padding:20px;">
+                        <div
+                          style="font-family: 'fira-sans', Roboto; font-size: 12px; line-height: 1.67; color: #afbdc5; font-weight: 500; display: inline-block;">
+                          <span style="margin-right: 7px;">Commit</span>
+                        </div>
+                        <div
+                          style="font-family: Helvetica, Arial, sans-serif;font-weight: bold; color: #212121; overflow: auto;  font-size: 14px;">
+                          {{ .Commit.Message }}
+                        </div>
+                      </div>
+                    </a>
+                  </td>
+                  <td width="95px">
+                    <table style="margin:0 auto;" width="100%" cellspacing="0" cellpadding="0">
+                      <tbody>
+                        <tr>
+                          <td style="text-align:right">
+                            <a href="https://leetcode.com/T7KxOs/?DRVUUAkwARUGHGpKABwBGQcWalAB=963&amp;DRVUUAk%3D=lourie%40naver.com&amp;BBFbUjoBEx0N=question_link&amp;DgpaVDoKHxEBFGpaCQYRGw%3D%3D=%7B%22Gx1bXTocFwMbEVpXOgYW%22%3A+963%2C+%22DRVUUAk%3D%22%3A+%22lourie%40naver.com%22%2C+%22HBlHXgAbLQUaFEY%3D%22%3A+%5B%22RxtaVxEKAQRHGUVQShgXFQMUTBQGABwEDQtBFFRXRF8aHVJQFhsXAg%3D%3D%22%2C+%22RxtaVxEKAQRHD1BcDgMLXQsXW00AHAZdWUADFg%3D%3D%22%5D%7D&amp;DhFbWAkwBwIE=https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/"
+                              style="display: block" rel="noreferrer noopener" target="_blank">
+                              <img src="https://assets.leetcode.com/static_assets/email_batch/grey.png" alt="›"
+                                style="margin-right: 36px" loading="lazy" height="12">
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0 20px;" colspan="2" width="100%" height="1">
+                    <div style="border-bottom: solid 1px rgba(219, 223, 226, 0.7);"></div>
+                  </td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  {{ end }}
+{{ end }}

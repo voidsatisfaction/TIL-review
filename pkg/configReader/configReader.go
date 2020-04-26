@@ -14,9 +14,9 @@ example config file format
     "repository": "TIL"
   },
   "mail": {
-    "from": "cyanicjin1@gmail.com",
+    "from": "youremail@gmail.com",
     "to": [
-      "cyanicjin1@gmail.com"
+	  "youremail@gmail.com"
     ],
     "username": "voidsatisfaction",
     "password": "pass"
@@ -26,7 +26,7 @@ example config file format
 */
 type configJSON struct {
 	Github struct {
-		Username   string `json:"username"`
+		Owner      string `json:"owner"`
 		Repository string `json:"repository"`
 	} `json:"github"`
 	Mail struct {
