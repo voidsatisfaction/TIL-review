@@ -2,7 +2,6 @@ package templateengine
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 )
 
@@ -25,7 +24,6 @@ func (te *TemplateEngine) CreateHTML(templateFilePathList []string, data interfa
 	if err = t.Execute(buf, data); err != nil {
 		return "", err
 	}
-	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	htmlString := fmt.Sprintf("%s%s", mime, buf.String())
+	htmlString := buf.String()
 	return htmlString, nil
 }

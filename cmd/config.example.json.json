@@ -1,0 +1,20 @@
+{
+  "github": {
+    "owner": "voidsatisfaction",
+    "repository": "TIL"
+  },
+  "mail": {
+    "smtpHost": "smtp.gmail.com",
+    "smtpPort": "587",
+    "from": "cyanicjin1@gmail.com",
+    "to": [
+      "lourie@naver.com"
+    ],
+    "username": "cyanicjin1@gmail.com",
+    "password": "yourpassword"
+  },
+  "alarmTime": [
+    "22:00",
+    "23:00"
+  ]
+}

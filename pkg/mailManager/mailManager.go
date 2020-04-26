@@ -25,9 +25,21 @@ func New(username, password, smtpHost, smtpPort string) *MailManager {
 	}
 }
 
-func (mm *MailManager) Send(from string, to []string, body string) error {
+func (mm *MailManager) SendHTML(from string, to []string, subject, htmlString string) error {
+	const MIME string = "MIME-version: 1.0;"
+	const CONTENTTYPE string = "Content-Type: text/html; "
+	const CHARSET string = "charset=\"UTF-8\";"
+	subject = fmt.Sprintf("Subject: %s", subject)
+	header := fmt.Sprintf("%s\n%s%s", MIME, CONTENTTYPE, CHARSET)
+
+	return mm.send(from, to, subject, header, htmlString)
+}
+
+func (mm *MailManager) send(from string, to []string, subject, header, body string) error {
 	smtpServerAddress := mm.smtpServerAddress()
-	err := smtp.SendMail(smtpServerAddress, mm.auth, from, to, []byte(body))
+	smtpBody := fmt.Sprintf("%s\n%s\n\n%s", subject, header, body)
+
+	err := smtp.SendMail(smtpServerAddress, mm.auth, from, to, []byte(smtpBody))
 	if err != nil {
 		return err
 	}

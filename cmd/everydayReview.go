@@ -12,9 +12,9 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("executable <path_of_config>")
-		fmt.Println("Error: config file path is not set")
+	if len(os.Args) < 3 {
+		fmt.Println("Error: command is not proper")
+		fmt.Println("Command should be: ./everydayReview config_file everyday_review_template_file")
 		os.Exit(1)
 	}
 	configFilePath := os.Args[1]
@@ -110,9 +110,10 @@ func main() {
 		configFile.Mail.SmtpPort,
 	)
 
-	err = mailManager.Send(
+	err = mailManager.SendHTML(
 		configFile.Mail.From,
 		configFile.Mail.To,
+		"[TIL-Review] Happy TIL Review Time !!",
 		htmlString,
 	)
 
