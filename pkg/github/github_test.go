@@ -41,7 +41,7 @@ func TestGithubClientGetTILCommits(t *testing.T) {
 	ghc := NewClient(owner, repository)
 	since, until := time.Now().AddDate(0, 0, -3), time.Now()
 
-	commitList, err := ghc.GetTILCommitList(&since, &until)
+	commitList, err := ghc.GetTILCommitList(&since, &until, 1, 5)
 
 	if err != nil {
 		t.Fatalf("%+v", err)
