@@ -3,7 +3,7 @@ name: TIL-Review
 on: [push]
 
 jobs:
-  test:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,5 +13,13 @@ jobs:
 
       - name: Run go test
         run: ./script/go_test.sh
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: ./script/production/build_image.sh
+
 
 
