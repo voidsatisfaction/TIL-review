@@ -70,8 +70,8 @@ func main() {
 		}
 	}
 
-	baseTemplateFilePath := "./template/_base.html"
-	headerTemplateFilePath := "./template/__header.html"
+	baseTemplateFilePath := "./template/_base.html.tmpl"
+	headerTemplateFilePath := "./template/__header.html.tmpl"
 	htmlFilePathList := []string{
 		everydayReviewHTMLFilePath,
 		baseTemplateFilePath,
