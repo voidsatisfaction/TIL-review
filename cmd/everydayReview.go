@@ -22,6 +22,8 @@ func main() {
 
 	configFile := configreader.ReadFromJson(configFilePath)
 
+	fmt.Printf("%+v\n", configFile)
+
 	githubClient := github.NewClient(
 		configFile.Github.Owner,
 		configFile.Github.Repository,
@@ -69,6 +71,23 @@ func main() {
 			commitList30DaysAgo = append(commitList30DaysAgo, commit)
 		}
 	}
+
+	// Get TIL Master Branch info and TIL Tree
+	// branchInfo, err := githubClient.GetBranchInfo("master")
+	// if err != nil {
+	// 	fmt.Printf("%+v\n", err)
+	// 	os.Exit(1)
+	// }
+
+	// tilMasterTreeSha := branchInfo.Commit.Sha
+
+	// FIXME: use tree
+	// tree, err := githubClient.GetTILTree(tilMasterTreeSha, true)
+
+	// if err != nil {
+	// 	fmt.Printf("%+v\n", err)
+	// 	os.Exit(1)
+	// }
 
 	baseTemplateFilePath := "./template/_base.html.tmpl"
 	headerTemplateFilePath := "./template/__header.html.tmpl"
