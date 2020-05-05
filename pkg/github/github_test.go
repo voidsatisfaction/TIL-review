@@ -51,3 +51,29 @@ func TestGithubClientGetTILCommits(t *testing.T) {
 		fmt.Println(commit)
 	}
 }
+
+func TestGithubClientGetTILTree(t *testing.T) {
+	owner, repository, sha := "voidsatisfaction", "TIL", "0930bd59a37e93c7243cb63945fe99f8b9eec038"
+	ghc := NewClient(owner, repository)
+
+	tree, err := ghc.GetTILTree(sha, true)
+
+	if err != nil {
+		t.Fatalf("%+v", err)
+	}
+
+	fmt.Printf("%+v\n", tree)
+}
+
+func TestGithubClientGetBranchInfo(t *testing.T) {
+	owner, repository, branch := "voidsatisfaction", "TIL", "master"
+	ghc := NewClient(owner, repository)
+
+	branchInfo, err := ghc.GetBranchInfo(branch)
+
+	if err != nil {
+		t.Fatalf("%+v", err)
+	}
+
+	fmt.Printf("%+v\n", branchInfo)
+}
