@@ -94,8 +94,9 @@ func main() {
 	}
 
 	type pinnedAndMatchedPath struct {
-		PinnedPath  string
-		MatchedPath string
+		PinnedPath      string
+		MatchedPath     string
+		MatchedPathLink string
 	}
 
 	// From TIL Tree, get random paths which match with pinnedPaths on config.json
@@ -111,15 +112,16 @@ func main() {
 			if strings.HasPrefix(path, fileOrFolderPath) && strings.HasSuffix(path, ".md") {
 
 				pamp := pinnedAndMatchedPath{
-					PinnedPath: fileOrFolderPath,
+					PinnedPath:  fileOrFolderPath,
+					MatchedPath: path,
 					// e.g) https://github.com/voidsatisfaction/TIL/blob/master/Math/README.md
-					MatchedPath: fmt.Sprintf(
+					MatchedPathLink: fmt.Sprintf(
 						"%s/%s/%s/blob/%s/%s",
 						GITHUB_HOST,
 						configFile.Github.Owner,
 						configFile.Github.Repository,
 						configFile.Github.Branch,
-						node.Path,
+						path,
 					),
 				}
 
