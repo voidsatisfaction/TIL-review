@@ -8,6 +8,12 @@
       <tr>
         <td width="100%" valign="top" bgcolor="#ffffff" align="center">
           <center>
+            <!-- pinned section -->
+            {{ template "pinned_section" . }}
+
+            <!-- commit section bar -->
+            {{ template "commit_section_bar" . }}
+
             <!-- last 3days section commits -->
             {{ template "last_3days_section" . }}
 
@@ -26,6 +32,51 @@
   </table>
 </section>
 
+{{ end }}
+
+{{ define "pinned_section" }}
+<table style="max-width: 680px;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+  <tr>
+    <td bgcolor="#2298D3">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+          <tr>
+            <td style="padding: 20px 20px 20px 20px; text-align: left; font-family: Helvetica,Arial,sans-serif; font-size: 22px; line-height: 28px; color: #fff; font-weight:600;"><a name="latest-content" rel="noreferrer noopener" target="_blank"></a>
+              Pinned Topics
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  {{ range .RandomPinnedMatchedPaths }}
+    <tr>
+      <td style="padding: 20px 20px 8px 20px; text-align: left; font-family: 'Roboto',Helvetica,Arial,sans-serif; font-size: 12px; line-height: 23px; color: #777777;">
+        <a href="{{ .MatchedPathLink }}" style="margin:0;color:#0e0e0e;text-decoration:none; font-weight:700;font-size: 16px;display:block;" rel="noreferrer noopener" target="_blank">
+          {{ .MatchedPath }}
+        </a> ({{ .PinnedPath }})
+      </td>
+    </tr>
+  {{ end }}
+</table>
+{{ end }}
+
+{{ define "commit_section_bar" }}
+<table style="max-width: 680px; margin-top: 20px" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+  <tr>
+    <td bgcolor="#0D8F76">
+      <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+          <tr>
+            <td style="padding: 20px 20px 20px 20px; text-align: left; font-family: Helvetica,Arial,sans-serif; font-size: 22px; line-height: 28px; color: #fff; font-weight:600;"><a name="latest-content" rel="noreferrer noopener" target="_blank"></a>
+              Last Commits
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+</table>
 {{ end }}
 
 {{ define "last_3days_section" }}

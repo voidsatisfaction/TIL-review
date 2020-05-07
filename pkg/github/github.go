@@ -11,10 +11,6 @@ import (
 
 const apiHost string = "https://api.github.com"
 
-func newCommitListURLString(owner, repository string) string {
-	return fmt.Sprintf("%s/repos/%s/%s/commits", apiHost, owner, repository)
-}
-
 type GithubClient struct {
 	owner      string
 	repository string
@@ -31,6 +27,10 @@ func NewClient(owner string, repository string) *GithubClient {
 
 		httpClient: httpClient,
 	}
+}
+
+func newCommitListURLString(owner, repository string) string {
+	return fmt.Sprintf("%s/repos/%s/%s/commits", apiHost, owner, repository)
 }
 
 type CommitList []Commit
@@ -80,4 +80,79 @@ func (githubClient *GithubClient) GetTILCommitList(since, until *time.Time, page
 	}
 
 	return commitList, nil
+}
+
+// https://api.github.com/repos/voidsatisfaction/TIL/git/trees/0930bd59a37e93c7243cb63945fe99f8b9eec038?recursive=1
+func newGithubTreeURLString(owner, repository, treeSha string) string {
+	return fmt.Sprintf("%s/repos/%s/%s/git/trees/%s", apiHost, owner, repository, treeSha)
+}
+
+type GithubTree struct {
+	Sha  string `json:"sha"`
+	Url  string `json:"url"`
+	Tree []Node `json:"tree"`
+}
+
+type Node struct {
+	Path string `json:"path"`
+}
+
+func (ghc *GithubClient) GetTILTree(treeSha string, recursive bool) (*GithubTree, error) {
+	githubTreeURLString := newGithubTreeURLString(ghc.owner, ghc.repository, treeSha)
+
+	recursiveQueryParameter := "0"
+	if recursive {
+		recursiveQueryParameter = "1"
+	}
+
+	resp, err := ghc.httpClient.R().
+		SetQueryParam("recursive", recursiveQueryParameter).
+		Get(githubTreeURLString)
+
+	if err != nil {
+		return nil, err
+	}
+
+	githubTree := &GithubTree{}
+
+	err = json.Unmarshal(resp.Body(), githubTree)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return githubTree, nil
+}
+
+func newBranchInfoURLString(owner, repository, branch string) string {
+	return fmt.Sprintf("%s/repos/%s/%s/branches/%s", apiHost, owner, repository, branch)
+}
+
+type BranchInfo struct {
+	Name   string `json:"name"`
+	Commit struct {
+		Sha string `json:"sha"`
+	}
+}
+
+// https://api.github.com/repos/voidsatisfaction/TIL/branches/master
+func (ghc *GithubClient) GetBranchInfo(branch string) (*BranchInfo, error) {
+	branchInfoURLString := newBranchInfoURLString(ghc.owner, ghc.repository, branch)
+
+	resp, err := ghc.httpClient.R().
+		Get(branchInfoURLString)
+
+	if err != nil {
+		return nil, err
+	}
+
+	branchInfo := &BranchInfo{}
+
+	err = json.Unmarshal(resp.Body(), branchInfo)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return branchInfo, nil
 }

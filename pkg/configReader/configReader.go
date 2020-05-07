@@ -28,6 +28,7 @@ type configJSON struct {
 	Github struct {
 		Owner      string `json:"owner"`
 		Repository string `json:"repository"`
+		Branch     string `json:"branch"`
 	} `json:"github"`
 	Mail struct {
 		SmtpHost string   `json:"smtpHost"`
@@ -38,6 +39,13 @@ type configJSON struct {
 		Password string   `json:"password"`
 	} `json:"mail"`
 	AlarmTime []string `json:"alarmTime"`
+	Template  struct {
+		EveryDayReview struct {
+			LastNDaysCommits        int      `json:"lastNDaysCommits"`
+			CommitListNDaysAgo      []int    `json:"commitListNDaysAgo"`
+			PinnedFileOrFolderPaths []string `json:"pinnedFileOrFolderPaths"`
+		} `json:"everydayReview"`
+	} `json:"template"`
 }
 
 func ReadFromJson(filePath string) *configJSON {

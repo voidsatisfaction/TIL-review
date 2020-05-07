@@ -1,7 +1,8 @@
 {
   "github": {
     "owner": "voidsatisfaction",
-    "repository": "TIL"
+    "repository": "TIL",
+    "branch": "master"
   },
   "mail": {
     "smtpHost": "smtp.gmail.com",
@@ -12,6 +13,20 @@
     ],
     "username": "cyanicjin1@gmail.com",
     "password": "yourpassword"
+  },
+  "template": {
+    "everydayReview": {
+      "lastNDaysCommits": 3,
+      "commitListNDaysAgo": [
+        7,
+        14,
+        30
+      ],
+      "pinnedFileOrFolderPaths": [
+        "Definitions",
+        "OS"
+      ]
+    }
   },
   "alarmTime": [
     "22:00",
