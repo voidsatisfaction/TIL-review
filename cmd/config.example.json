@@ -14,17 +14,22 @@
     "username": "cyanicjin1@gmail.com",
     "password": "yourpassword"
   },
-  "alarmTime": [
-    "22:00",
-    "23:00"
-  ],
   "template": {
     "everydayReview": {
       "lastNDaysCommits": 3,
-      "commitListNDaysAgo": [7, 14, 30],
+      "commitListNDaysAgo": [
+        7,
+        14,
+        30
+      ],
       "pinnedFileOrFolderPaths": [
-        "/"
+        "Definitions",
+        "OS"
       ]
     }
-  }
+  },
+  "alarmTime": [
+    "22:00",
+    "23:00"
+  ]
 }

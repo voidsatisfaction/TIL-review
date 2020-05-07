@@ -90,9 +90,11 @@ func newGithubTreeURLString(owner, repository, treeSha string) string {
 type GithubTree struct {
 	Sha  string `json:"sha"`
 	Url  string `json:"url"`
-	Tree []struct {
-		Path string `json:"path"`
-	}
+	Tree []Node `json:"tree"`
+}
+
+type Node struct {
+	Path string `json:"path"`
 }
 
 func (ghc *GithubClient) GetTILTree(treeSha string, recursive bool) (*GithubTree, error) {

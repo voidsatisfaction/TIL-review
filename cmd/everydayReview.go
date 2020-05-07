@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
+	"strings"
 	"time"
 
 	configreader "github.com/voidsatisfaction/TIL-review/pkg/configReader"
@@ -10,6 +12,8 @@ import (
 	"github.com/voidsatisfaction/TIL-review/pkg/mailManager"
 	templateengine "github.com/voidsatisfaction/TIL-review/pkg/templateEngine"
 )
+
+const GITHUB_HOST string = "https://github.com"
 
 func main() {
 	if len(os.Args) < 3 {
@@ -48,6 +52,7 @@ func main() {
 		}
 	}
 
+	// TODO: use config setting not hard coding
 	last3DaysCommitList := github.CommitList{}
 	commitList7DaysAgo := github.CommitList{}
 	commitList14DaysAgo := github.CommitList{}
@@ -73,21 +78,60 @@ func main() {
 	}
 
 	// Get TIL Master Branch info and TIL Tree
-	// branchInfo, err := githubClient.GetBranchInfo("master")
-	// if err != nil {
-	// 	fmt.Printf("%+v\n", err)
-	// 	os.Exit(1)
-	// }
+	branchInfo, err := githubClient.GetBranchInfo("master")
+	if err != nil {
+		fmt.Printf("%+v\n", err)
+		os.Exit(1)
+	}
 
-	// tilMasterTreeSha := branchInfo.Commit.Sha
+	tilMasterTreeSha := branchInfo.Commit.Sha
 
-	// FIXME: use tree
-	// tree, err := githubClient.GetTILTree(tilMasterTreeSha, true)
+	githubTree, err := githubClient.GetTILTree(tilMasterTreeSha, true)
 
-	// if err != nil {
-	// 	fmt.Printf("%+v\n", err)
-	// 	os.Exit(1)
-	// }
+	if err != nil {
+		fmt.Printf("%+v\n", err)
+		os.Exit(1)
+	}
+
+	type pinnedAndMatchedPath struct {
+		PinnedPath  string
+		MatchedPath string
+	}
+
+	// From TIL Tree, get random paths which match with pinnedPaths on config.json
+	randomPinnedMatchedPaths := []pinnedAndMatchedPath{}
+
+	pinnedFileOrFolderPaths := configFile.Template.EveryDayReview.PinnedFileOrFolderPaths
+	for _, fileOrFolderPath := range pinnedFileOrFolderPaths {
+		matchedPaths := []pinnedAndMatchedPath{}
+		for _, node := range githubTree.Tree {
+			path := node.Path
+
+			// should be file
+			if strings.HasPrefix(path, fileOrFolderPath) && strings.HasSuffix(path, ".md") {
+
+				pamp := pinnedAndMatchedPath{
+					PinnedPath: fileOrFolderPath,
+					// e.g) https://github.com/voidsatisfaction/TIL/blob/master/Math/README.md
+					MatchedPath: fmt.Sprintf(
+						"%s/%s/%s/blob/%s/%s",
+						GITHUB_HOST,
+						configFile.Github.Owner,
+						configFile.Github.Repository,
+						configFile.Github.Branch,
+						node.Path,
+					),
+				}
+
+				matchedPaths = append(matchedPaths, pamp)
+			}
+		}
+
+		rand.Seed(time.Now().UnixNano())
+		randomMatchedPath := matchedPaths[rand.Intn(len(matchedPaths))]
+
+		randomPinnedMatchedPaths = append(randomPinnedMatchedPaths, randomMatchedPath)
+	}
 
 	baseTemplateFilePath := "./template/_base.html.tmpl"
 	headerTemplateFilePath := "./template/__header.html.tmpl"
@@ -103,17 +147,19 @@ func main() {
 	htmlString, err := templateEngine.CreateHTML(
 		htmlFilePathList,
 		struct {
-			Today               string
-			Last3DaysCommitList interface{}
-			CommitList7DaysAgo  interface{}
-			CommitList14DaysAgo interface{}
-			CommitList30DaysAgo interface{}
+			Today                    string
+			Last3DaysCommitList      interface{}
+			CommitList7DaysAgo       interface{}
+			CommitList14DaysAgo      interface{}
+			CommitList30DaysAgo      interface{}
+			RandomPinnedMatchedPaths interface{}
 		}{
-			Today:               todayString,
-			Last3DaysCommitList: last3DaysCommitList,
-			CommitList7DaysAgo:  commitList7DaysAgo,
-			CommitList14DaysAgo: commitList14DaysAgo,
-			CommitList30DaysAgo: commitList30DaysAgo,
+			Today:                    todayString,
+			Last3DaysCommitList:      last3DaysCommitList,
+			CommitList7DaysAgo:       commitList7DaysAgo,
+			CommitList14DaysAgo:      commitList14DaysAgo,
+			CommitList30DaysAgo:      commitList30DaysAgo,
+			RandomPinnedMatchedPaths: randomPinnedMatchedPaths,
 		},
 	)
 
