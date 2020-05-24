@@ -16,6 +16,8 @@ import (
 const GITHUB_HOST string = "https://github.com"
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	if len(os.Args) < 3 {
 		fmt.Println("Error: command is not proper")
 		fmt.Println("Command should be: ./everydayReview config_file everyday_review_template_file")
@@ -33,7 +35,7 @@ func main() {
 		configFile.Github.Repository,
 	)
 
-	// Get last 3days commitlist
+	// --- Get last 3days commitlist
 	// if time.now() == "2019-01-04T10:04:59"
 	// since == "2019-01-01T00:00:00"
 	since, until := time.Now().AddDate(0, 0, -30).Truncate(24*time.Hour).Add(-9*time.Hour), time.Now()
@@ -52,6 +54,7 @@ func main() {
 		}
 	}
 
+	// --- Get 7, 14, 30 days ago commits
 	// TODO: use config setting not hard coding
 	last3DaysCommitList := github.CommitList{}
 	commitList7DaysAgo := github.CommitList{}
@@ -77,6 +80,7 @@ func main() {
 		}
 	}
 
+	// --- Get pinned folder or files
 	// Get TIL Master Branch info and TIL Tree
 	branchInfo, err := githubClient.GetBranchInfo("master")
 	if err != nil {
@@ -93,46 +97,84 @@ func main() {
 		os.Exit(1)
 	}
 
-	type pinnedAndMatchedPath struct {
-		PinnedPath      string
-		MatchedPath     string
-		MatchedPathLink string
+	type fileOrFolderPathData struct {
+		Path     string
+		PathLink string
+	}
+
+	type pinnedFileOrFolderPathData struct {
+		PinnedPath           string
+		FileOrFolderPathData fileOrFolderPathData
 	}
 
 	// From TIL Tree, get random paths which match with pinnedPaths on config.json
-	randomPinnedMatchedPaths := []pinnedAndMatchedPath{}
+	filePathDataList := []fileOrFolderPathData{}
+
+	for _, node := range githubTree.Tree {
+		path := node.Path
+
+		if strings.HasSuffix(path, ".md") {
+			fofpd := fileOrFolderPathData{
+				Path: path,
+				// e.g) https://github.com/voidsatisfaction/TIL/blob/master/Math/README.md
+				PathLink: fmt.Sprintf(
+					"%s/%s/%s/blob/%s/%s",
+					GITHUB_HOST,
+					configFile.Github.Owner,
+					configFile.Github.Repository,
+					configFile.Github.Branch,
+					path,
+				),
+			}
+
+			filePathDataList = append(filePathDataList, fofpd)
+		}
+	}
+
+	randomPinnedMatchedPathData := []pinnedFileOrFolderPathData{}
 
 	pinnedFileOrFolderPaths := configFile.Template.EveryDayReview.PinnedFileOrFolderPaths
 	for _, fileOrFolderPath := range pinnedFileOrFolderPaths {
-		matchedPaths := []pinnedAndMatchedPath{}
-		for _, node := range githubTree.Tree {
-			path := node.Path
+		matchedPaths := []pinnedFileOrFolderPathData{}
+
+		for _, filePathData := range filePathDataList {
+			path := filePathData.Path
 
 			// should be file
-			if strings.HasPrefix(path, fileOrFolderPath) && strings.HasSuffix(path, ".md") {
-
-				pamp := pinnedAndMatchedPath{
-					PinnedPath:  fileOrFolderPath,
-					MatchedPath: path,
-					// e.g) https://github.com/voidsatisfaction/TIL/blob/master/Math/README.md
-					MatchedPathLink: fmt.Sprintf(
-						"%s/%s/%s/blob/%s/%s",
-						GITHUB_HOST,
-						configFile.Github.Owner,
-						configFile.Github.Repository,
-						configFile.Github.Branch,
-						path,
-					),
+			if strings.HasPrefix(path, fileOrFolderPath) {
+				pamp := pinnedFileOrFolderPathData{
+					PinnedPath: fileOrFolderPath,
+					FileOrFolderPathData: fileOrFolderPathData{
+						Path: path,
+						// e.g) https://github.com/voidsatisfaction/TIL/blob/master/Math/README.md
+						PathLink: fmt.Sprintf(
+							"%s/%s/%s/blob/%s/%s",
+							GITHUB_HOST,
+							configFile.Github.Owner,
+							configFile.Github.Repository,
+							configFile.Github.Branch,
+							path,
+						),
+					},
 				}
 
 				matchedPaths = append(matchedPaths, pamp)
 			}
 		}
 
-		rand.Seed(time.Now().UnixNano())
-		randomMatchedPath := matchedPaths[rand.Intn(len(matchedPaths))]
+		if len(matchedPaths) > 0 {
+			randomMatchedPath := matchedPaths[rand.Intn(len(matchedPaths))]
 
-		randomPinnedMatchedPaths = append(randomPinnedMatchedPaths, randomMatchedPath)
+			randomPinnedMatchedPathData = append(randomPinnedMatchedPathData, randomMatchedPath)
+		}
+	}
+
+	// --- Get Random picks
+	randomPicks := configFile.Template.EveryDayReview.RandomPicks
+	randomFilePicks := []fileOrFolderPathData{}
+	for i := 0; i < randomPicks; i++ {
+		randomPick := filePathDataList[rand.Intn(len(filePathDataList))]
+		randomFilePicks = append(randomFilePicks, randomPick)
 	}
 
 	baseTemplateFilePath := "./template/_base.html.tmpl"
@@ -149,19 +191,21 @@ func main() {
 	htmlString, err := templateEngine.CreateHTML(
 		htmlFilePathList,
 		struct {
-			Today                    string
-			Last3DaysCommitList      interface{}
-			CommitList7DaysAgo       interface{}
-			CommitList14DaysAgo      interface{}
-			CommitList30DaysAgo      interface{}
-			RandomPinnedMatchedPaths interface{}
+			Today                       string
+			Last3DaysCommitList         interface{}
+			CommitList7DaysAgo          interface{}
+			CommitList14DaysAgo         interface{}
+			CommitList30DaysAgo         interface{}
+			RandomPinnedMatchedPathData interface{}
+			RandomFilePicks             interface{}
 		}{
-			Today:                    todayString,
-			Last3DaysCommitList:      last3DaysCommitList,
-			CommitList7DaysAgo:       commitList7DaysAgo,
-			CommitList14DaysAgo:      commitList14DaysAgo,
-			CommitList30DaysAgo:      commitList30DaysAgo,
-			RandomPinnedMatchedPaths: randomPinnedMatchedPaths,
+			Today:                       todayString,
+			Last3DaysCommitList:         last3DaysCommitList,
+			CommitList7DaysAgo:          commitList7DaysAgo,
+			CommitList14DaysAgo:         commitList14DaysAgo,
+			CommitList30DaysAgo:         commitList30DaysAgo,
+			RandomPinnedMatchedPathData: randomPinnedMatchedPathData,
+			RandomFilePicks:             randomFilePicks,
 		},
 	)
 

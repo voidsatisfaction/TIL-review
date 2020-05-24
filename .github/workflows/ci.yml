@@ -8,18 +8,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # TODO: use docker golang
       - run: go version
 
       - name: Run go test
         run: ./script/go_test.sh
-  build-test:
+  build-and-run-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
       - name: Build Docker image
         run: ./script/production/build_image.sh
+      
+      # It cannot be done as the config.yml contains secret password and it is public repo
+      # - name: Run everydayReview application
+      #   run: ./script/production/run_everyday_review.sh
 
 
 

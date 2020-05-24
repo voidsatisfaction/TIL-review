@@ -5,7 +5,6 @@ RUN apt-get update && \
 
 WORKDIR /go/src/til-review-app
 
-COPY ./go.mod .
-COPY ./go.sum .
+COPY . .
 
-RUN go get -d -v ./...
+RUN go build cmd/everydayReview.go

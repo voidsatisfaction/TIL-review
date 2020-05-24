@@ -41,9 +41,10 @@ type configJSON struct {
 	AlarmTime []string `json:"alarmTime"`
 	Template  struct {
 		EveryDayReview struct {
+			RandomPicks             int      `json:"randomPicks"`
+			PinnedFileOrFolderPaths []string `json:"pinnedFileOrFolderPaths"`
 			LastNDaysCommits        int      `json:"lastNDaysCommits"`
 			CommitListNDaysAgo      []int    `json:"commitListNDaysAgo"`
-			PinnedFileOrFolderPaths []string `json:"pinnedFileOrFolderPaths"`
 		} `json:"everydayReview"`
 	} `json:"template"`
 }
